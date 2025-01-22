@@ -10,10 +10,27 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  ECR_REPOSITORY: app-6  # Added to match app-ci-cd.yml
 permissions: read-all
 
 jobs:
+  verify-ecr:
+    name: 'verify-prerequisites'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{ secrets.IAM_ROLE }}
+        role-session-name: AWSSession
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: Verify ECR Repository
+      run: |
+        aws ecr describe-repositories --repository-names ${{ env.ECR_REPOSITORY }} || exit 1
+
   terraform:
+    needs: verify-ecr
     name: 'continuous-integration'
     runs-on: ubuntu-latest
     environment: production
@@ -58,6 +75,7 @@ jobs:
       run: |
         terraform plan -no-color -input=false \
         -var="ecs_secret=${{ secrets.ECS_SECRECT }}" \
+        -var="ecr_repository=${{ env.ECR_REPOSITORY }}" \
         -out=TFplan.JSON
       continue-on-error: true
 
@@ -95,4 +113,5 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         terraform apply -auto-approve -input=false \
-        -var="ecs_secret=${{ secrets.ECS_SECRECT }}"
+        -var="ecs_secret=${{ secrets.ECS_SECRECT }}" \
+        -var="ecr_repository=${{ env.ECR_REPOSITORY }}"
