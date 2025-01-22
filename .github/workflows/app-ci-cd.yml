@@ -4,7 +4,8 @@ on:
   push:
     branches: [ '*' ]
     paths:
-      - 'app/**'
+      - 'app/src/**'  # More specific path
+      - 'app/Dockerfile'
       - 'deploy/**'
       - '.github/workflows/app-ci-cd.yml'
 env:
@@ -13,7 +14,24 @@ env:
 permissions: read-all
 
 jobs:
+  verify-infrastructure:
+    name: 'verify-prerequisites'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.IAM_ROLE }}
+        role-session-name: AWSSession
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: Verify Infrastructure
+      run: |
+        aws ecr describe-repositories --repository-names ${{ env.ECR_REPOSITORY }} || exit 1
+        aws ecs describe-clusters --clusters dummy-data-generator || exit 1
+
   build:
+    needs: verify-infrastructure
     name: 'continuous-integration'
     runs-on: ubuntu-latest
     environment: development
