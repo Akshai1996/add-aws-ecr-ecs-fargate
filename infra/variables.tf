@@ -4,6 +4,12 @@ variable "region" {
   type        = string
   default     = "us-east-1"
 }
+varibale "kms_key_id" {
+description = "The name of the application."
+  type        = string
+  default     = ""
+}
+
 #Define IAM User Access Key
 variable "access_key" {
   description = "The access_key that belongs to the IAM user."
