@@ -6,7 +6,7 @@ resource "aws_ecs_service" "service" {
   desired_count        = 2
   force_new_deployment = true
   load_balancer {
-    target_group_arn = local.infra_output["aws_lb_target_group_arn"]
+    target_group_arn = local.infra_output["aws_lb_blue_target_group_arn"]
     container_name   = "first"
     container_port   = "8080" # Application Port
   }
@@ -15,5 +15,11 @@ resource "aws_ecs_service" "service" {
     security_groups  = [local.infra_output["container_security_group_id"]]
     subnets          = local.infra_output["subnet_ids"]
     assign_public_ip = false
+  }
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+  lifecycle {
+    ignore_changes = [load_balancer, task_definition]
   }
 }
