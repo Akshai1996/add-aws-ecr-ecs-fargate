@@ -1,10 +1,8 @@
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/service_discovery_http_namespace
 resource "aws_service_discovery_http_namespace" "namespace" {
   name        = var.name
   description = "The namespace for the ECS cluster. "
 }
 resource "aws_vpc" "this" {
-  #checkov:skip=CKV2_AWS_11: This is non prod and hence disabled.
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true

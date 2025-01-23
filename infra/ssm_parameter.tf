@@ -1,4 +1,3 @@
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter
 resource "aws_ssm_parameter" "infra_output" {
   name        = "/${var.name}/output"
   description = "Infrastructure layer resources."

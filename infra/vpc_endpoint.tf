@@ -1,5 +1,5 @@
 
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
+
 resource "aws_vpc_endpoint" "ecr" {
   vpc_id              = aws_vpc.this.id
   service_name        = "com.amazonaws.${var.region}.ecr.dkr"
@@ -11,7 +11,7 @@ resource "aws_vpc_endpoint" "ecr" {
     "Name" = "${var.name}-ecr"
   }
 }
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
+
 resource "aws_vpc_endpoint" "ecr_api" {
   vpc_id              = aws_vpc.this.id
   service_name        = "com.amazonaws.${var.region}.ecr.api"
@@ -23,7 +23,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
     "Name" = "${var.name}-ecr-api"
   }
 }
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
+
 resource "aws_vpc_endpoint" "cloudwatch" {
   vpc_id              = aws_vpc.this.id
   service_name        = "com.amazonaws.${var.region}.logs"
@@ -35,7 +35,7 @@ resource "aws_vpc_endpoint" "cloudwatch" {
     "Name" = "${var.name}-logs"
   }
 }
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
+
 resource "aws_vpc_endpoint" "secrets_manager" {
   vpc_id              = aws_vpc.this.id
   service_name        = "com.amazonaws.${var.region}.secretsmanager"
@@ -47,7 +47,7 @@ resource "aws_vpc_endpoint" "secrets_manager" {
     "Name" = "${var.name}-secrets-manager"
   }
 }
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
+
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.this.id
   service_name      = "com.amazonaws.${var.region}.s3"
@@ -56,7 +56,7 @@ resource "aws_vpc_endpoint" "s3" {
     "Name" = "${var.name}-s3"
   }
 }
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint_route_table_association
+
 resource "aws_vpc_endpoint_route_table_association" "s3_association" {
   route_table_id  = aws_route_table.this_rt_private.id
   vpc_endpoint_id = aws_vpc_endpoint.s3.id
